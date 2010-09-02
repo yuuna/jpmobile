@@ -2,19 +2,21 @@
 # -*- coding: utf-8 -*-
 require 'rubygems'
 require 'open-uri'
-require 'hpricot'
+require 'nokogiri'
 require 'pp'
+require 'kconv'
 
-src = URI("http://www.nttdocomo.co.jp/service/imode/make/content/spec/screen_area/index.html").read.toutf8
-src.gsub!(/&mu;/,"myu")
+src = "http://www.nttdocomo.co.jp/service/imode/make/content/spec/screen_area/index.html"
+#src.gsub!(/&mu;/,"myu")
 user_agents = {}
 
-(Hpricot(src)/"//div[@id='maincol']//table").each do |table|
+
+(Nokogiri::HTML(open(src))/"//div[@id='maincol']//table").each do |table|
   (table/"tr[@class='acenter']").each do |tr|
     a = (tr/:td).map {|x| x.inner_text }
     i = 0
     if a.size == 7
-      if a[0] =~ /[A-Z]{1,2}\-\d{2}A/ # iモードブラウザ2.0
+      if a[0] =~ /[A-Z]{1,2}\-\d{2}[A-Z]/ # iモードブラウザ2.0
         i = 1
       else
         a.shift # remove rowspan
@@ -22,11 +24,11 @@ user_agents = {}
     elsif a.size != 6
       raise "something is wrong"
     end
+
     a[0].sub!(/（.*）/,"")
     a[0].sub!(/\(.+\)/,"")
     a[0].sub!(/-/,'') # F-01A -> F01A
     a[0].sub!(/$/,'3') if i == 1 # iモードブラウザ2.0
-
     a[3+i].sub!(/^.*?(\d+×\d+).*$/,'\1')
     width, height = a[3+i].split(/×/,2).map{|x| x.to_i}
     case a[5+i]
