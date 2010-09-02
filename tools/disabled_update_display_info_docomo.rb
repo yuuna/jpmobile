@@ -9,9 +9,20 @@ require 'kconv'
 src = "http://www.nttdocomo.co.jp/service/imode/make/content/spec/screen_area/index.html"
 #src.gsub!(/&mu;/,"myu")
 user_agents = {}
-
+ihtml = []
 
 (Nokogiri::HTML(open(src))/"//div[@id='maincol']//table").each do |table|
+  chtml = table.attribute("summary").value
+  if chtml =~ /iモードブラウザ(.*)の表/
+     chtml = "ihtml"+$1
+  else
+	chtml.sub!(/.*HTML/,'chtml')
+  	chtml.sub!(/（.*）の表/,'')
+  end	
+
+  chtml.downcase!
+  ihtml.push chtml
+
   (table/"tr[@class='acenter']").each do |tr|
     a = (tr/:td).map {|x| x.inner_text }
     i = 0
@@ -41,12 +52,16 @@ user_agents = {}
     else
       raise "something is wrong (in detecting colors)"
     end
-    user_agents[a[0]] = {:browser_width=>width, :browser_height=>height, :color_p=>color_p, :colors=>colors}
+    user_agents[a[0]] = {:browser_width=>width, :browser_height=>height, :color_p=>color_p, :colors=>colors, :html_ver=>chtml}
   end
 end
+
+ihtml.reverse!
 
 # 書き出し
 open("lib/jpmobile/mobile/z_display_info_docomo.rb","w") do |f|
   f.puts "Jpmobile::Mobile::Docomo::DISPLAY_INFO ="
   f.puts user_agents.pretty_inspect
+  f.puts "Jpmobile::Mobile::Docomo::HTML_INFO ="
+  f.puts ihtml.pretty_inspect
 end

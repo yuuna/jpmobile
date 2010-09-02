@@ -48,5 +48,12 @@ task :update do
   end
 end
 
+
+desc "Update docomo display"
+task :docomo_display do
+    ruby "tools/disabled_update_display_info_docomo.rb"
+end
+
+
 task :test => ['test:legacy', 'spec:unit', 'spec:rack', 'test:rails']
 load 'lib/tasks/jpmobile_tasks.rake'
