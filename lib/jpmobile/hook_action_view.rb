@@ -51,7 +51,7 @@ module ActionView
       end
 
       if view_class and parent_class
-        find_mobile_template(view_class, parent_class, template_prefix).push(template_prefix)
+        find_mobile_template(view_class, parent_class, template_prefix).push(template_prefix).unshift(controller.request.mobile.send(:model_name).underscore)
       else
         []
       end
