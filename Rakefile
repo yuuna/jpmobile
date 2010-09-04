@@ -48,16 +48,12 @@ task :update do
   end
 end
 
-<<<<<<< HEAD
-
 desc "Update docomo display"
 task :docomo_display do
     ruby "tools/disabled_update_display_info_docomo.rb"
 end
 
 
-task :test => ['test:legacy', 'spec:unit', 'spec:rack', 'test:rails']
-=======
 namespace :test do
   desc "Preparation of external modules"
   task :prepare do
@@ -79,5 +75,4 @@ namespace :test do
 end
 
 task :test => ['test:prepare', 'test:legacy', 'spec:unit', 'spec:rack', 'test:rails']
->>>>>>> 5bed70445821ab917fc1fe3e1a1709908e98b981
 load 'lib/tasks/jpmobile_tasks.rake'
