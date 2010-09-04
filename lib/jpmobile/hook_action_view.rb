@@ -23,8 +23,9 @@ module ActionView
       if controller and controller.kind_of?(ActionController::Base) and
           (controller.request.mobile? or controller.request.smart_phone?)
         return path if path.respond_to?(:render)
-        template_candidates = mobile_template_candidates
+        template_candidates = controller.request.mobile.docomo?  ? mobile_template_candidates.unshift(controller.request.mobile.send(:model_name).underscore) : mobile_template_candidates
 
+	p template_candidates
         each do |load_path|
           template_candidates.each do |template_postfix|
             templates = load_path.find_all("#{path}_#{template_postfix}", prefix, partial, details, key)
@@ -51,7 +52,7 @@ module ActionView
       end
 
       if view_class and parent_class
-        find_mobile_template(view_class, parent_class, template_prefix).push(template_prefix).unshift(controller.request.mobile.send(:model_name).underscore)
+        find_mobile_template(view_class, parent_class, template_prefix).push(template_prefix)
       else
         []
       end

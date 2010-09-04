@@ -7,7 +7,7 @@ require 'pp'
 require 'kconv'
 
 src = "http://www.nttdocomo.co.jp/service/imode/make/content/spec/screen_area/index.html"
-#src.gsub!(/&mu;/,"myu")
+#
 user_agents = {}
 ihtml = []
 
@@ -24,7 +24,7 @@ ihtml = []
   ihtml.push chtml
 
   (table/"tr[@class='acenter']").each do |tr|
-    a = (tr/:td).map {|x| x.inner_text }
+   a = (tr/:td).map {|x| x.inner_text }
     i = 0
     if a.size == 7
       if a[0] =~ /[A-Z]{1,2}\-\d{2}[A-Z]/ # iモードブラウザ2.0
@@ -40,6 +40,7 @@ ihtml = []
     a[0].sub!(/\(.+\)/,"")
     a[0].sub!(/-/,'') # F-01A -> F01A
     a[0].sub!(/$/,'3') if i == 1 # iモードブラウザ2.0
+    a[0].sub!(/μ/,"myu")
     a[3+i].sub!(/^.*?(\d+×\d+).*$/,'\1')
     width, height = a[3+i].split(/×/,2).map{|x| x.to_i}
     case a[5+i]

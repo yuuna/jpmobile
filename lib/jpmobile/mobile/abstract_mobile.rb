@@ -4,7 +4,9 @@ require 'ipaddr'
 module Jpmobile::Mobile
   # 携帯電話の抽象クラス。
   class AbstractMobile
+
     def initialize(env, request)
+      @model   = nil
       @env     = env
       @request = request
     end
