@@ -25,7 +25,6 @@ module ActionView
         return path if path.respond_to?(:render)
         template_candidates = controller.request.mobile.docomo?  ? mobile_template_candidates.unshift(controller.request.mobile.send(:model_name).underscore) : mobile_template_candidates
 
-	p template_candidates
         each do |load_path|
           template_candidates.each do |template_postfix|
             templates = load_path.find_all("#{path}_#{template_postfix}", prefix, partial, details, key)
