@@ -58,7 +58,13 @@ module ActionView
     end
 
     def mobile_template_candidates_with_modelname
-	controller.request.mobile.docomo?  ? mobile_template_candidates_without_modelname.unshift(controller.request.mobile.send(:model_name).underscore+"_docomo") : mobile_template_candidates_without_modelname
+	if controller.request.mobile.docomo?  ==  true
+	   controller.request.mobile.send(:get_html_version_list).map{|x| x+='_docomo'}.concat(mobile_template_candidates_without_modelname).unshift(controller.request.mobile.send(:model_name).downcase+"_docomo")
+
+	else 
+	    mobile_template_candidates_without_modelname
+	end
+	 
     end
 
     alias_method_chain :mobile_template_candidates, :modelname

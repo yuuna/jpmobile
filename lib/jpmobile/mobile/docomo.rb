@@ -6,6 +6,7 @@ module Jpmobile::Mobile
   class Docomo < AbstractMobile
     autoload :IP_ADDRESSES, 'jpmobile/mobile/z_ip_addresses_docomo'
     autoload :DISPLAY_INFO, 'jpmobile/mobile/z_display_info_docomo'
+    autoload :HTML_INFO,    'jpmobile/mobile/z_html_info_docomo'
 
     # 対応するUser-Agentの正規表現
     USER_AGENT_REGEXP = /^DoCoMo/
@@ -141,6 +142,11 @@ module Jpmobile::Mobile
     # 画面の情報を含むハッシュを返す。
     def display_info
       DISPLAY_INFO[model_name] || {}
+    end
+
+    # 指定された端末のhtmlバージョンを含む配列を返す
+    def get_html_version_list
+    	 HTML_INFO.slice(HTML_INFO.index(display_info[:html_ver]),HTML_INFO.size)
     end
   end
 end

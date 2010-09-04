@@ -15,13 +15,14 @@ ihtml = []
   chtml = table.attribute("summary").value
   if chtml =~ /iモードブラウザ(.*)の表/
      chtml = "ihtml"+$1
+     chtml.sub!(/\./,'_')
   else
-	chtml.sub!(/.*HTML/,'chtml')
-  	chtml.sub!(/（.*）の表/,'')
+     chtml.sub!(/.*HTML/,'chtml')
+     chtml.sub!(/（.*）の表/,'')
+     chtml.sub!(/\./,'_')
   end	
 
-  chtml.downcase!
-  ihtml.push chtml
+  chtml != ihtml[0] ? ihtml.unshift(chtml) : chtml
 
   (table/"tr[@class='acenter']").each do |tr|
    a = (tr/:td).map {|x| x.inner_text }
@@ -57,12 +58,13 @@ ihtml = []
   end
 end
 
-ihtml.reverse!
-
 # 書き出し
 open("lib/jpmobile/mobile/z_display_info_docomo.rb","w") do |f|
   f.puts "Jpmobile::Mobile::Docomo::DISPLAY_INFO ="
   f.puts user_agents.pretty_inspect
+end
+
+open("lib/jpmobile/mobile/z_html_info_docomo.rb","w") do |f|
   f.puts "Jpmobile::Mobile::Docomo::HTML_INFO ="
   f.puts ihtml.pretty_inspect
 end

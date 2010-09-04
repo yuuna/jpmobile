@@ -13,7 +13,19 @@ describe TemplatePathController, "DoCoMo SH902i からのアクセス" do
   it 'テンプレートの探索順が正しいこと' do
     get "/template_path/index", {}, { "HTTP_USER_AGENT" => @user_agent}
 
-    controller.view_paths.mobile_template_candidates.should == [ 'sh902i_docomo' , 'mobile_docomo', 'mobile' ]
+    controller.view_paths.mobile_template_candidates.should == [ 'sh902i_docomo' , "chtml6_0_docomo", "chtml5_0_docomo", "chtml4_0_docomo", "chtml3_0_docomo", "chtml2_0_docomo", "chtml1_0_docomo", 'mobile_docomo', 'mobile' ]
+  end
+end
+
+describe TemplatePathController, "SH-06A からのアクセス" do
+  before do
+    @user_agent = "DoCoMo/2.0 SH06A3(c500;TB;W24H14)"
+  end
+
+  it 'テンプレートの探索順が正しいこと（ドコモHTML2.0用）' do
+    get "/template_path/index", {}, { "HTTP_USER_AGENT" => @user_agent}
+
+    controller.view_paths.mobile_template_candidates.should == [ 'sh06a3_docomo' ,"ihtml2_0_docomo","chtml7_2_docomo","chtml7_1_docomo","chtml7_0_docomo", "chtml6_0_docomo", "chtml5_0_docomo", "chtml4_0_docomo", "chtml3_0_docomo", "chtml2_0_docomo", "chtml1_0_docomo", 'mobile_docomo', 'mobile' ]
   end
 end
 
@@ -131,6 +143,24 @@ describe TemplatePathController, "integrated_views" do
     end
 
 
+    context "個別端末用ページがなくchtml7.1で表示するDoCoMoからのアクセスの場合" do
+      before do
+          @user_agent = "DoCoMo/2.0 SH06A3(c500;TB;W24H14)"
+      end
+      it 'index_chtml7_1_docomo.html.erbが使用されること' do
+        get "/template_path/index", {}, { "HTTP_USER_AGENT" => @user_agent}
+
+        response.should have_tag("h1", :content => "index_chtml7_1_docomo.html.erb")
+      end
+
+      it 'show.html.erb がなくとも show_chtml7_1_docomo.html.erbが使用されること' do
+        get "/template_path/show", {}, { "HTTP_USER_AGENT" => @user_agent}
+
+        response.should have_tag("h1", :content => "show_chtml7_1_docomo.html.erb")
+      end
+    end
+
+
     context "SoftBankからのアクセスの場合" do
       before do
         @user_agent = "SoftBank/1.0/910T/TJ001/SN000000000000000 Browser/NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1"
@@ -194,6 +224,17 @@ describe TemplatePathController, "integrated_views" do
       end
     end
 
+    context "DoCoMoからのアクセスの場合" do
+      before do
+        @user_agent = "DoCoMo/2.0 SH902i(c100;TB;W24H12)"
+      end
+      it '_partial_mobile_docomo.html.erbが使用されること' do
+        get "/template_path/partial", {}, { "HTTP_USER_AGENT" => @user_agent}
+
+        response.should have_tag("h2", :content => "_partial_mobile_docomo.html.erb")
+      end
+    end
+
     context "個別ページありのDoCoMoからのアクセスの場合" do
       before do
         @user_agent = "DoCoMo/2.0 P905i(c100;TB;W24H14)"
@@ -206,17 +247,18 @@ describe TemplatePathController, "integrated_views" do
     end
 
 
-
-    context "DoCoMoからのアクセスの場合" do
+    context "個別端末用ページがなくchtml7.1で表示するDoCoMoからのアクセスの場合" do
       before do
-        @user_agent = "DoCoMo/2.0 SH902i(c100;TB;W24H12)"
+          @user_agent = "DoCoMo/2.0 SH06A3(c500;TB;W24H14)"
       end
-      it '_partial_mobile_docomo.html.erbが使用されること' do
+      it '_partial_chtml7_1_docomo.html.erbが使用されること' do
         get "/template_path/partial", {}, { "HTTP_USER_AGENT" => @user_agent}
 
-        response.should have_tag("h2", :content => "_partial_mobile_docomo.html.erb")
+        response.should have_tag("h2", :content => "_partial_chtml7_1_docomo.html.erb")
       end
+
     end
+
 
     context "SoftBankからのアクセスの場合" do
       before do
