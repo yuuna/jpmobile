@@ -23,7 +23,7 @@ module ActionView
       if controller and controller.kind_of?(ActionController::Base) and
           (controller.request.mobile? or controller.request.smart_phone?)
         return path if path.respond_to?(:render)
-        template_candidates = controller.request.mobile.docomo?  ? mobile_template_candidates.unshift(controller.request.mobile.send(:model_name).underscore) : mobile_template_candidates
+        template_candidates = mobile_template_candidates
 
         each do |load_path|
           template_candidates.each do |template_postfix|
@@ -38,6 +38,7 @@ module ActionView
 
     alias_method_chain :find, :jpmobile  #:nodoc:
 
+
     def mobile_template_candidates #:nodoc:
       candidates = []
 
@@ -49,13 +50,19 @@ module ActionView
       else
         [nil, nil, nil]
       end
-
       if view_class and parent_class
         find_mobile_template(view_class, parent_class, template_prefix).push(template_prefix)
       else
         []
       end
     end
+
+    def mobile_template_candidates_with_modelname
+	controller.request.mobile.docomo?  ? mobile_template_candidates_without_modelname.unshift(controller.request.mobile.send(:model_name).underscore+"_docomo") : mobile_template_candidates_without_modelname
+    end
+
+    alias_method_chain :mobile_template_candidates, :modelname
+
 
     private
     def find_mobile_template(klass, parent, prefix)
