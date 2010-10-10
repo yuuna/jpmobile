@@ -68,6 +68,17 @@ namespace :test do
         puts "IP Address test requires jpmobile-ipaddresses module"
       end
 
+      # setup jpmobile-terminfo
+      begin
+        plugin_path = File.join(rails_root, 'vendor', 'plugins', 'jpmobile-terminfo')
+        FileUtils.mkdir_p(plugin_path)
+        FileList["vendor/jpmobile-terminfo/*"].exclude("test").each do |file|
+          FileUtils.cp_r(file, plugin_path)
+        end
+      rescue LoadError
+        puts "Terminal display information test requires jpmobile-terminfo module"
+      end
+
       # setup tests
       FileList["test/rails/overrides/*"].each do |file|
         FileUtils.cp_r(file, rails_root)
@@ -87,7 +98,7 @@ END
       # ruby "-S bundle install"
       ruby "-S rake db:migrate test"
       ruby "-S rake spec"
-      # ruby "-S rspec -b --color spec/requests/trans_sid_spec.rb"
+      # ruby "-S rspec -b --color spec/requests/filter_spec.rb -e 'jpmobile integration spec HankakuInputFilterController DoCoMo SH902i からのアクセス はtextareaの中では半角に変換されないこと'"
 
       cd relative_root
     end

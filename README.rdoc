@@ -6,10 +6,12 @@
 
 * 携帯電話のキャリア判別
 * 端末位置情報の取得
-  * GeoKit(http://geokit.rubyforge.org)との連携
+  * {GeoKit}[http://geokit.rubyforge.org] との連携
 * 端末製造番号、契約者番号等の取得
 * IPアドレスの検証(キャリアが公開しているIPアドレス帯域からのアクセスか判定)
+  * IPアドレスの検証には {jpmobile-ipaddresses}[http://github.com/jpmobile/jpmobile-ipaddresses] が必要です。
 * ディスプレイ情報(画面サイズ、ブラウザ画面サイズ、カラー・白黒、色数)の取得
+  * ディスプレイ情報の取得には {jpmobile-terminfo}[http://github.com/jpmobile/jpmobile-terminfo] が必要です。
 * 文字コード変換機能／絵文字のキャリア間相互変換
 
 また Rails 3.0 に以下の機能を追加する
@@ -20,9 +22,17 @@
 == インストール
 === Rails pluginとしてインストールする場合
   % rails plugin install git://github.com/jpmobile/jpmobile.git
+==== IPアドレス検証が必要な場合
+  % rails plugin install git://github.com/jpmobile/jpmobile-ipaddresses.git
+==== ディスプレイ情報を取得する必要がある場合
+  % rails plugin install git://github.com/jpmobile/jpmobile-ipaddresses.git
 
 === gemでインストールする場合
   % gem install jpmobile
+==== IPアドレス検証が必要な場合
+  % gem install jpmobile-ipaddresses
+==== ディスプレイ情報を取得する必要がある場合
+  % gem install jpmobile-terminfo
 
 == 使用例
 
@@ -88,7 +98,6 @@
   end
 
   class MobileController < ApplicationController
-     mobile_filter
   end
 
 === 位置情報の取得
@@ -97,7 +106,7 @@ Rack::Request#mobile.position に位置情報が格納されます。
   @latitude   = request.mobile.position.lat
   @longuitude = request.mobile.position.lon
 
-==== GeoKit(http://geokit.rubyforge.org)との連携
+==== {GeoKit}[http://geokit.rubyforge.org] との連携
 
 vandor/plugins/geokit以下にGeoKitがインストールされていると、Jpmobile::PositionにGeoKit::Mappableがincludeされる。したがって、
 
@@ -122,12 +131,13 @@ vandor/plugins/geokit以下にGeoKitがインストールされていると、Jp
 === IPの検証
 キャリアが公開しているIPアドレス帯域からのアクセスか判定する。
   request.mobile.valid_ip?
-ただしスマートフォンの場合は必ずfalseとなる。
+ただし {jpmobile-ipaddresses}[http://github.com/jpmobile/jpmobile-ipaddresses] がインストールされていないか、スマートフォンの場合は必ずfalseとなる。
 
 === 端末の画面サイズ
 request.mobile.display で Jpmobile::Display クラスのインスタンスが返る。
   画面幅 <%= request.mobile.display.width %>
   画面高さ <%= request.mobile.display.height %>
+ただし {jpmobile-terminfo}[http://github.com/jpmobile/jpmobile-terminfo] がインストールされていない場合はエラーとなるので注意が必要。
 
 === 文字コード変換機能／絵文字のキャリア間相互変換
 
@@ -162,10 +172,14 @@ jpmobileを読み込むとDoCoMo、Au、SoftBankの絵文字を透過的に扱�
 Rails のみ半角・全角の自動変換フィルターが用意されている。用いるには
 
  class MyController
-   mobile_filter :hankaku=>true
+   hankaku_filter
  end
 
-と指定する。
+と指定する。またtextareaやhidden/text/passwordのinputタグで半角に変換したくない場合は :input => true を指定する。
+
+ class MyController
+   hankaku_filter :input => true
+ end
 
 Jpmobile内では、各キャリアの絵文字はUnicode私的領域上にマッピングされ、管理される。
 このとき、DoCoMo、Auは公式サイト記載のマッピングが使用される。

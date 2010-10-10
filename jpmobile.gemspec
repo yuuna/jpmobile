@@ -5,11 +5,10 @@
 
 Gem::Specification.new do |s|
   s.name = %q{jpmobile}
-  s.version = "0.1.0.pre.4"
-
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.version = "0.1.2"
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Yoji Shidara", "Shin-ichiro OGAWA"]
-  s.date = %q{2010-08-24}
+  s.date = %q{2010-09-16}
   s.description = %q{A Rails plugin for Japanese mobile-phones}
   s.email = %q{dara@shidara.net}
   s.extra_rdoc_files = [
@@ -46,7 +45,6 @@ Gem::Specification.new do |s|
      "lib/jpmobile/mobile/android.rb",
      "lib/jpmobile/mobile/au.rb",
      "lib/jpmobile/mobile/ddipocket.rb",
-     "lib/jpmobile/mobile/display.rb",
      "lib/jpmobile/mobile/docomo.rb",
      "lib/jpmobile/mobile/emobile.rb",
      "lib/jpmobile/mobile/iphone.rb",
@@ -55,12 +53,6 @@ Gem::Specification.new do |s|
      "lib/jpmobile/mobile/vodafone.rb",
      "lib/jpmobile/mobile/willcom.rb",
      "lib/jpmobile/mobile/windows_phone.rb",
-     "lib/jpmobile/mobile/z_display_info_docomo.rb",
-     "lib/jpmobile/mobile/z_ip_addresses_au.rb",
-     "lib/jpmobile/mobile/z_ip_addresses_docomo.rb",
-     "lib/jpmobile/mobile/z_ip_addresses_emobile.rb",
-     "lib/jpmobile/mobile/z_ip_addresses_softbank.rb",
-     "lib/jpmobile/mobile/z_ip_addresses_willcom.rb",
      "lib/jpmobile/position.rb",
      "lib/jpmobile/rack.rb",
      "lib/jpmobile/rack/filter.rb",
@@ -89,7 +81,6 @@ Gem::Specification.new do |s|
      "spec/unit/spec_helper.rb",
      "spec/unit/util_spec.rb",
      "spec/unit/valid_ip_spec.rb",
-     "test/legacy/autoload_test.rb",
      "test/legacy/emoticon_test.rb",
      "test/legacy/helper.rb",
      "test/rails/.gitignore",
@@ -154,15 +145,12 @@ Gem::Specification.new do |s|
      "test/rails/overrides/spec/spec_helper.rb",
      "test/sinatra/guestbook.rb",
      "test/sinatra/test/filter_test.rb",
-     "tools/disabled_update_display_info_docomo.rb",
      "tools/emoji/genregexp.rb",
      "tools/generate_au_emoticon_table.rb",
      "tools/generate_docomo_emoticon_table.rb",
      "tools/generate_emoticon_conversion_table.rb",
      "tools/generate_softbank_emoticon_table.rb",
-     "tools/list_gps_unsupported_au.rb",
-     "tools/update_ip_addresses_au.rb",
-     "tools/update_ip_addresses_willcom.rb"
+     "tools/list_gps_unsupported_au.rb"
   ]
   s.homepage = %q{http://github.com/jpmobile/jpmobile}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -188,7 +176,6 @@ Gem::Specification.new do |s|
      "spec/unit/is_carrier_spec.rb",
      "spec/spec_helper.rb",
      "spec/rack_helper.rb",
-     "test/legacy/autoload_test.rb",
      "test/legacy/emoticon_test.rb",
      "test/legacy/helper.rb",
      "test/sinatra/guestbook.rb",
@@ -232,20 +219,17 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, [">= 1.3.0"])
-      s.add_development_dependency(%q<rspec-rails>, [">= 1.3.2"])
-      s.add_development_dependency(%q<rspec-fixture>, [">= 0.0.2"])
+      s.add_development_dependency(%q<rspec>, ["= 2.0.0.beta.17"])
+      s.add_development_dependency(%q<rspec-rails>, ["= 2.0.0.beta.17"])
       s.add_development_dependency(%q<jeweler>, [">= 1.4.0"])
     else
-      s.add_dependency(%q<rspec>, [">= 1.3.0"])
-      s.add_dependency(%q<rspec-rails>, [">= 1.3.2"])
-      s.add_dependency(%q<rspec-fixture>, [">= 0.0.2"])
+      s.add_dependency(%q<rspec>, ["= 2.0.0.beta.17"])
+      s.add_dependency(%q<rspec-rails>, ["= 2.0.0.beta.17"])
       s.add_dependency(%q<jeweler>, [">= 1.4.0"])
     end
   else
-    s.add_dependency(%q<rspec>, [">= 1.3.0"])
-    s.add_dependency(%q<rspec-rails>, [">= 1.3.2"])
-    s.add_dependency(%q<rspec-fixture>, [">= 0.0.2"])
+    s.add_dependency(%q<rspec>, ["= 2.0.0.beta.17"])
+    s.add_dependency(%q<rspec-rails>, ["= 2.0.0.beta.17"])
     s.add_dependency(%q<jeweler>, [">= 1.4.0"])
   end
 end

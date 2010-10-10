@@ -42,7 +42,9 @@ module Jpmobile::Mobile
 
     # 画面情報を +Display+ クラスのインスタンスで返す。
     def display
-      @__displlay ||= Jpmobile::Display.new
+      @__displlay ||= Jpmobile::Mobile::Terminfo.new(self, @env)
+    rescue LoadError
+      puts "display method require jpmobile-terminfo plugin."
     end
 
     # クッキーをサポートしているか。
